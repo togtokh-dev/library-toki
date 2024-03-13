@@ -1,0 +1,188 @@
+import axios from "axios";
+import TOKIPAY from ".";
+type resDeeplinkT = {
+  callback: string;
+  successUrl?: string;
+  failureUrl?: string;
+  orderId: string;
+  merchantId?: string;
+  amount: number;
+  notes: string;
+  appSchemaIos?: string;
+  tokiWebSuccessUrl?: string;
+  tokiWebFailureUrl?: string;
+};
+type resQrT = {
+  callback: string;
+  successUrl?: string;
+  failureUrl?: string;
+  orderId: string;
+  merchantId?: string;
+  amount: number;
+  notes: string;
+};
+
+const CREATE_DEEP_LINK = async (
+  body: resDeeplinkT
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: {
+    deeplink: string;
+  };
+}> => {
+  try {
+    const res = await axios.post(
+      `${TOKIPAY.host}/jump/v1/third-party/payment/deeplink`,
+      {
+        successUrl: body.successUrl || body.callback,
+        failureUrl: body.successUrl || body.callback,
+        orderId: body.orderId,
+        merchantId: TOKIPAY.merchant_id || body.merchantId,
+        amount: body.amount,
+        notes: body.notes,
+        appSchemaIos: body.appSchemaIos || "skype://",
+        authorization: `Basic ${TOKIPAY.token}`,
+        tokiWebSuccessUrl: body.successUrl || body.callback,
+        tokiWebFailureUrl: body.successUrl || body.callback,
+      },
+      {
+        headers: {
+          Authorization: `Basic ${TOKIPAY.token.third_party_token}`,
+          api_key: "third_party_pay",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (res.data.statusCode == 200 && res.data?.data?.deeplink) {
+      console.log(res.data.data);
+      return {
+        success: true,
+        message: "success",
+        data: {
+          deeplink: res.data.data.deeplink,
+        },
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.message || "",
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+
+const CREATE_QR_CODE = async (
+  body: resQrT
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: {
+    qr: string;
+  };
+}> => {
+  try {
+    const res = await axios.post(
+      `${TOKIPAY.host}/jump/v1/spose/payment/request`,
+      {
+        successUrl: body.successUrl || body.callback,
+        failureUrl: body.successUrl || body.callback,
+        orderId: body.orderId,
+        merchantId: TOKIPAY.merchant_id || body.merchantId,
+        amount: body.amount,
+        notes: body.notes,
+        authorization: `Basic ${TOKIPAY.token.spose_token}`,
+      },
+      {
+        headers: {
+          Authorization: `Basic ${TOKIPAY.token.spose_token}`,
+          api_key: "spos_pay",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (res.data.statusCode == 200 && res.data?.data?.requestId) {
+      console.log(res.data.data);
+      return {
+        success: true,
+        message: "success",
+        data: {
+          qr: `/SPOS/${res.data.data.requestId}`,
+        },
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.message || "",
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+
+const CALLBACK = async (
+  body: resDeeplinkT
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: {
+    deeplink: string;
+    requestId: string;
+  };
+}> => {
+  try {
+    const res = await axios.post(
+      `${TOKIPAY.host}/jump/v1/third-party/payment/deeplink`,
+      {
+        successUrl: body.successUrl || body.callback,
+        failureUrl: body.successUrl || body.callback,
+        orderId: body.orderId,
+        merchantId: TOKIPAY.merchant_id || body.merchantId,
+        amount: body.amount,
+        notes: body.notes,
+        appSchemaIos: body.appSchemaIos || "skype://",
+        authorization: `Basic ${TOKIPAY.token}`,
+        tokiWebSuccessUrl: body.successUrl || body.callback,
+        tokiWebFailureUrl: body.successUrl || body.callback,
+      },
+      {
+        headers: {
+          Authorization: `Basic ${TOKIPAY.token}`,
+        },
+      }
+    );
+    if (res.data.statusCode == 200 && res.data?.data?.deeplink) {
+      return {
+        success: true,
+        message: "success",
+        data: {
+          deeplink: res.data.data.deeplink,
+          requestId: res.data.data.requestId,
+        },
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.message || "",
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+export default { CREATE: { QR: CREATE_QR_CODE, DEEP_LINK: CREATE_DEEP_LINK } };

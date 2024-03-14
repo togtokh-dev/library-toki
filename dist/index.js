@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.invoice = void 0;
 const auth_1 = require("./auth");
 const invoice_1 = require("./invoice");
-let merchant_id = "";
+let merchant_id = null;
 const token = {
     third_party_token: "",
     spose_token: "",

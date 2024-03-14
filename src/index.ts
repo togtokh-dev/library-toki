@@ -1,6 +1,6 @@
 import auth from "./auth";
 import invoice from "./invoice";
-let merchant_id = "";
+let merchant_id: null | string = null;
 const token = {
   third_party_token: "",
   spose_token: "",

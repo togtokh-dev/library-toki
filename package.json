@@ -1,6 +1,6 @@
 {
   "name": "@togtokh.dev/tokipay",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "tokipay is a library for qpay payment gateway. It is a wrapper for axios and https module. It is a simple and easy-to-use library for tokipay payment gateway. It is a wrapper for axios and https module. It is a simple and easy-to-use library for tokipay payment gateway api",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

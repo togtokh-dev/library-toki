@@ -21,7 +21,19 @@ type resQrT = {
   amount: number;
   notes: string;
 };
-
+type resPhoneT = {
+  callback: string;
+  successUrl?: string;
+  failureUrl?: string;
+  orderId: string;
+  merchantId?: string;
+  amount: number;
+  notes: string;
+  phoneNo: number;
+  countryCode?: string;
+  tokiWebSuccessUrl?: string;
+  tokiWebFailureUrl?: string;
+};
 const CREATE_DEEP_LINK = async (
   body: resDeeplinkT
 ): Promise<{
@@ -131,8 +143,8 @@ const CREATE_QR_CODE = async (
   }
 };
 
-const CALLBACK = async (
-  body: resDeeplinkT
+const CREATE_PHONE_NUMBER = async (
+  body: resPhoneT
 ): Promise<{
   success: boolean;
   message: string;
@@ -143,7 +155,7 @@ const CALLBACK = async (
 }> => {
   try {
     const res = await axios.post(
-      `${TOKIPAY.host}/jump/v1/third-party/payment/deeplink`,
+      `${TOKIPAY.host}/jump/v1/third-party/payment/request`,
       {
         successUrl: body.successUrl || body.callback,
         failureUrl: body.successUrl || body.callback,
@@ -151,7 +163,8 @@ const CALLBACK = async (
         merchantId: TOKIPAY.merchant_id || body.merchantId,
         amount: body.amount,
         notes: body.notes,
-        appSchemaIos: body.appSchemaIos || "skype://",
+        phoneNo: body.phoneNo,
+        countryCode: body.countryCode || "+976",
         authorization: `Basic ${TOKIPAY.token}`,
         tokiWebSuccessUrl: body.successUrl || body.callback,
         tokiWebFailureUrl: body.successUrl || body.callback,
@@ -162,14 +175,11 @@ const CALLBACK = async (
         },
       }
     );
-    if (res.data.statusCode == 200 && res.data?.data?.deeplink) {
+    if (res.data.statusCode == 200) {
       return {
         success: true,
         message: "success",
-        data: {
-          deeplink: res.data.data.deeplink,
-          requestId: res.data.data.requestId,
-        },
+        data: null,
       };
     } else {
       return {
@@ -185,4 +195,100 @@ const CALLBACK = async (
     };
   }
 };
-export default { CREATE: { QR: CREATE_QR_CODE, DEEP_LINK: CREATE_DEEP_LINK } };
+const TRANS_REQUEST_ID = async (
+  transRequestId: string,
+  token: string
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: null;
+}> => {
+  try {
+    const res = await axios.get(
+      `${TOKIPAY.host}/jump/v1/shoppy/transaction-status?transRequestId=${transRequestId}`,
+      {
+        headers: {
+          Authorization: `bearer ${token}`,
+          "Content-Type": "application/json",
+          authorization: "bearer " + token,
+          im_api_key: "shoppy123",
+        },
+      }
+    );
+    if (res.data.statusCode == 200) {
+      return {
+        success: true,
+        message: "success",
+        data: null,
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.message || "",
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+const REQUEST_ID = async (
+  requestId: string
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: any;
+}> => {
+  try {
+    const res = await axios.get(
+      `${TOKIPAY.host}/jump/v1/spose/payment/status?requestId=${requestId}`,
+      {
+        headers: {
+          Authorization: `Basic ${TOKIPAY.token.spose_token}`,
+          api_key: "spos_pay",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(res.data);
+    if (res.data.statusCode == 200) {
+      if (res.data.data.status == "COMPLETED") {
+        return {
+          success: true,
+          message: "success",
+          data: res.data.data,
+        };
+      }
+      return {
+        success: false,
+        message: res.data.message,
+        data: res.data.data,
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.message || "",
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+export default {
+  CREATE: {
+    QR: CREATE_QR_CODE,
+    DEEP_LINK: CREATE_DEEP_LINK,
+    SEND_INVOCIE: CREATE_PHONE_NUMBER,
+  },
+  CHECK: {
+    TRANS_REQUEST_ID,
+    REQUEST_ID,
+  },
+};

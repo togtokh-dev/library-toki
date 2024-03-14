@@ -56,6 +56,38 @@ declare const _default: {
                     deeplink: string;
                 };
             }>;
+            SEND_INVOCIE: (body: {
+                callback: string;
+                successUrl?: string;
+                failureUrl?: string;
+                orderId: string;
+                merchantId?: string;
+                amount: number;
+                notes: string;
+                phoneNo: number;
+                countryCode?: string;
+                tokiWebSuccessUrl?: string;
+                tokiWebFailureUrl?: string;
+            }) => Promise<{
+                success: boolean;
+                message: string;
+                data?: {
+                    deeplink: string;
+                    requestId: string;
+                };
+            }>;
+        };
+        CHECK: {
+            TRANS_REQUEST_ID: (transRequestId: string, token: string) => Promise<{
+                success: boolean;
+                message: string;
+                data?: null;
+            }>;
+            REQUEST_ID: (requestId: string) => Promise<{
+                success: boolean;
+                message: string;
+                data?: any;
+            }>;
         };
     };
 };

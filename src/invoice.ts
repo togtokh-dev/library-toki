@@ -53,7 +53,7 @@ const CREATE_DEEP_LINK = async (
         merchantId: TOKIPAY.merchant_id || body.merchantId,
         amount: body.amount,
         notes: body.notes,
-        appSchemaIos: body.appSchemaIos || "skype://",
+        appSchemaIos: body.appSchemaIos || undefined,
         authorization: `Basic ${TOKIPAY.token}`,
         tokiWebSuccessUrl: body.successUrl || body.callback,
         tokiWebFailureUrl: body.successUrl || body.callback,

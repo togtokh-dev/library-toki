@@ -12,7 +12,7 @@ const CREATE_DEEP_LINK = async (body) => {
             merchantId: _1.default.merchant_id || body.merchantId,
             amount: body.amount,
             notes: body.notes,
-            appSchemaIos: body.appSchemaIos || "skype://",
+            appSchemaIos: body.appSchemaIos || undefined,
             authorization: `Basic ${_1.default.token}`,
             tokiWebSuccessUrl: body.successUrl || body.callback,
             tokiWebFailureUrl: body.successUrl || body.callback,

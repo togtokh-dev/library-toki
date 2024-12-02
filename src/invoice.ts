@@ -1,5 +1,8 @@
 import axios from "axios";
 import TOKIPAY from ".";
+const axiosInstance = axios.create({
+  timeout: 20000, // 20 seconds
+});
 type resDeeplinkT = {
   callback: string;
   successUrl?: string;
@@ -44,7 +47,7 @@ const CREATE_DEEP_LINK = async (
   };
 }> => {
   try {
-    const res = await axios.post(
+    const res = await axiosInstance.post(
       `${TOKIPAY.host}/jump/v1/third-party/payment/deeplink`,
       {
         successUrl: body.successUrl || body.callback,
@@ -100,7 +103,7 @@ const CREATE_QR_CODE = async (
   };
 }> => {
   try {
-    const res = await axios.post(
+    const res = await axiosInstance.post(
       `${TOKIPAY.host}/jump/v1/spose/payment/request`,
       {
         successUrl: body.successUrl || body.callback,
@@ -154,7 +157,7 @@ const CREATE_PHONE_NUMBER = async (
   };
 }> => {
   try {
-    const res = await axios.post(
+    const res = await axiosInstance.post(
       `${TOKIPAY.host}/jump/v1/third-party/payment/request`,
       {
         successUrl: body.successUrl || body.callback,
@@ -204,7 +207,7 @@ const TRANS_REQUEST_ID = async (
   data?: null;
 }> => {
   try {
-    const res = await axios.get(
+    const res = await axiosInstance.get(
       `${TOKIPAY.host}/jump/v1/shoppy/transaction-status?transRequestId=${transRequestId}`,
       {
         headers: {
@@ -243,7 +246,7 @@ const REQUEST_ID = async (
   data?: any;
 }> => {
   try {
-    const res = await axios.get(
+    const res = await axiosInstance.get(
       `${TOKIPAY.host}/jump/v1/spose/payment/status?requestId=${requestId}`,
       {
         headers: {

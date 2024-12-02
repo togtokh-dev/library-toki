@@ -2,10 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = require("axios");
 const _1 = require(".");
+const axiosInstance = axios_1.default.create({
+    timeout: 20000, // 20 seconds
+});
 const CREATE_DEEP_LINK = async (body) => {
     var _a, _b, _c, _d, _e;
     try {
-        const res = await axios_1.default.post(`${_1.default.host}/jump/v1/third-party/payment/deeplink`, {
+        const res = await axiosInstance.post(`${_1.default.host}/jump/v1/third-party/payment/deeplink`, {
             successUrl: body.successUrl || body.callback,
             failureUrl: body.successUrl || body.callback,
             orderId: body.orderId,
@@ -51,7 +54,7 @@ const CREATE_DEEP_LINK = async (body) => {
 const CREATE_QR_CODE = async (body) => {
     var _a, _b, _c, _d, _e;
     try {
-        const res = await axios_1.default.post(`${_1.default.host}/jump/v1/spose/payment/request`, {
+        const res = await axiosInstance.post(`${_1.default.host}/jump/v1/spose/payment/request`, {
             successUrl: body.successUrl || body.callback,
             failureUrl: body.successUrl || body.callback,
             orderId: body.orderId,
@@ -94,7 +97,7 @@ const CREATE_QR_CODE = async (body) => {
 const CREATE_PHONE_NUMBER = async (body) => {
     var _a, _b, _c;
     try {
-        const res = await axios_1.default.post(`${_1.default.host}/jump/v1/third-party/payment/request`, {
+        const res = await axiosInstance.post(`${_1.default.host}/jump/v1/third-party/payment/request`, {
             successUrl: body.successUrl || body.callback,
             failureUrl: body.successUrl || body.callback,
             orderId: body.orderId,
@@ -136,7 +139,7 @@ const CREATE_PHONE_NUMBER = async (body) => {
 const TRANS_REQUEST_ID = async (transRequestId, token) => {
     var _a, _b, _c;
     try {
-        const res = await axios_1.default.get(`${_1.default.host}/jump/v1/shoppy/transaction-status?transRequestId=${transRequestId}`, {
+        const res = await axiosInstance.get(`${_1.default.host}/jump/v1/shoppy/transaction-status?transRequestId=${transRequestId}`, {
             headers: {
                 Authorization: `bearer ${token}`,
                 "Content-Type": "application/json",
@@ -169,7 +172,7 @@ const TRANS_REQUEST_ID = async (transRequestId, token) => {
 const REQUEST_ID = async (requestId) => {
     var _a, _b, _c;
     try {
-        const res = await axios_1.default.get(`${_1.default.host}/jump/v1/spose/payment/status?requestId=${requestId}`, {
+        const res = await axiosInstance.get(`${_1.default.host}/jump/v1/spose/payment/status?requestId=${requestId}`, {
             headers: {
                 Authorization: `Basic ${_1.default.token.spose_token}`,
                 api_key: "spos_pay",

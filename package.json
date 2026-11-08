@@ -1,6 +1,6 @@
 {
   "name": "@togtokh.dev/tokipay",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "TokiPay payment gateway client for Node.js & TypeScript — QR & deeplink invoices and payment status checks.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

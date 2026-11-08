@@ -1,7 +1,7 @@
 {
   "name": "@togtokh.dev/tokipay",
-  "version": "0.0.5",
-  "description": "tokipay is a library for qpay payment gateway. It is a wrapper for axios and https module. It is a simple and easy-to-use library for tokipay payment gateway. It is a wrapper for axios and https module. It is a simple and easy-to-use library for tokipay payment gateway api",
+  "version": "0.0.6",
+  "description": "TokiPay payment gateway client for Node.js & TypeScript — QR & deeplink invoices and payment status checks.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -11,13 +11,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-ts": "rm -rf ./dist && npx tsc",
-    "build": "npx tsc",
+    "build": "rm -rf ./dist && npx tsc",
     "debug": "npm run build && npm run watch-debug",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/togtokh-dev/library/payment/qpay.git"
+    "url": "git+https://github.com/togtokh-dev/library-toki.git"
   },
   "keywords": [
     "qpay",
@@ -27,9 +27,9 @@
   "author": "TOGTOKH.DEV",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/togtokh-dev/library/payment/qpay/issues"
+    "url": "https://github.com/togtokh-dev/library-toki/issues"
   },
-  "homepage": "https://gitlab.com/togtokh-dev/library/payment/qpay/#readme",
+  "homepage": "https://github.com/togtokh-dev/library-toki#readme",
   "dependencies": {
     "axios": "^1.6.7",
     "https": "^1.0.0",
